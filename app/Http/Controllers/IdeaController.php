@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Idea;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -47,7 +48,11 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        return view('idea.show', compact('idea', 'user'));
+        //$createdAt = Carbon::parse($idea->created_at);
+        //$timeSinceCreation = $createdAt->diffForHumans();
+        //var_dump($timeSinceCreation);
+
+        return view('idea.show', compact('idea'));
     }
 
     /**

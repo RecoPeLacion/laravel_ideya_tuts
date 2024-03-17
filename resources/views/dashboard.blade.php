@@ -9,11 +9,13 @@
         @include('inc.success-message')
         @include('inc.post-idea')
         <hr>
-        @foreach ($ideas as $idea)
+        @forelse ($ideas as $idea)
             @include('inc.idea-card')
-        @endforeach
+        @empty
+            <p class="text-center mt-3">No results found.</p>
+        @endforelse
         <div class="mt-3">
-            {{ $ideas->links() }}
+            {{ $ideas->withQueryString()->links() }}
         </div>
     </div>
     <div class="col-3">

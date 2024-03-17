@@ -3,7 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\IdeaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,33 +22,16 @@ use Illuminate\Support\Facades\Route;
 // root page
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-//store route idea
-Route::post('/idea', [IdeaController::class, 'store'])->name('idea.store');
+Route::resource('idea', IdeaController::class)->except(['index', 'create', 'show'])->middleware('auth');
 
-// delete route idea
-Route::delete('/idea/{idea}', [IdeaController::class, 'destroy'])->name('idea.destroy')->middleware('auth');
+Route::resource('idea', IdeaController::class)->only(['show']);
 
-// show route idea
-Route::get('/idea/{idea}', [IdeaController::class, 'show'])->name('idea.show');
+Route::resource('idea.comments', CommentController::class)->only(['store'])->middleware('auth');
 
-// edit route idea
-Route::get('/idea/{idea}/edit', [IdeaController::class, 'edit'])->name('idea.edit')->middleware('auth');
+Route::resource('users', UserController::class)->only('show', 'edit', 'update')->middleware('auth');
 
-// update route idea
-Route::put('/idea/{idea}', [IdeaController::class, 'update'])->name('idea.update')->middleware('auth');
+Route::get('profile', [UserController::class, 'profile'])->middleware('auth')->name('profile');
 
+Route::post('users/{user}/follow', [FollowerController::class, 'follow'])->middleware('auth')->name('users.follow');
 
-// comments route idea
-Route::post('/ideas/{idea}/comments', [CommentController::class, 'store'])->name('idea.comments.store')->middleware('auth');
-
-// register route
-Route::get('/register', [AuthController::class, 'register'])->name('register');
-
-Route::post('/register', [AuthController::class, 'store']);
-
-// login route
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-
-Route::post('/login', [AuthController::class, 'authenticate']);
-
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('users/{user}/unfollow', [FollowerController::class, 'unfollow'])->middleware('auth')->name('users.unfollow');
